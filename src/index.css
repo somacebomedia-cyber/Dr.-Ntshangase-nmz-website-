@@ -1,0 +1,104 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  :root {
+    --brand-teal: #0a5450;
+    --brand-teal-dark: #073b38;
+    --brand-teal-light: #14b8a6;
+    --brand-mint: #2dd4bf;
+    --brand-seafoam: #99f6e4;
+    --page-bg: #ffffff;
+    --page-text: #0f172a;
+    --font-heading: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    --font-body: 'DM Sans', system-ui, -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  .dark, html.dark {
+    --page-bg: #061c1a;
+    --page-text: #f8fafc;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    font-family: var(--font-body);
+  }
+
+  body {
+    background-color: var(--page-bg);
+    color: var(--page-text);
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    letter-spacing: -0.02em;
+  }
+
+  .font-mono, .tabular-nums {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Custom Medical Cards - Cards remain signature dark teal green in BOTH light and dark modes! */
+.glass-panel {
+  background: linear-gradient(145deg, #0a5450 0%, #073b38 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(45, 212, 191, 0.3) !important;
+  box-shadow: 0 4px 18px -2px rgba(10, 84, 80, 0.28) !important;
+}
+
+.dark .glass-panel {
+  background: linear-gradient(145deg, #094744 0%, #062b29 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(45, 212, 191, 0.24) !important;
+  box-shadow: 0 6px 24px -2px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Ensure headings inside green cards stay crisp white */
+.glass-panel h1,
+.glass-panel h2,
+.glass-panel h3,
+.glass-panel h4,
+.glass-panel h5,
+.glass-panel h6 {
+  color: #ffffff !important;
+}
+
+.glass-card-hover {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
+}
+
+.glass-card-hover:hover {
+  transform: translateY(-2px);
+}
+
+/* Circle motif floating animations */
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+  }
+  50% {
+    transform: translateY(-8px) scale(1.02);
+  }
+}
+
+@keyframes floatGentle {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(2deg);
+  }
+}
+
+.animate-float-slow {
+  animation: floatSlow 7s ease-in-out infinite;
+}
+
+.animate-float-gentle {
+  animation: floatGentle 9s ease-in-out infinite;
+}
