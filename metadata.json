@@ -1,5 +1,5 @@
 {
-  "name": "Dr M.N. Ntshangase GP Surgery",
+  "name": "Dr. NtShangase website",
   "description": "Dr M.N. Ntshangase General Practitioner Surgery in Umzimkhulu. Featuring online appointment scheduling, encrypted patient health portal, and healthcare provider queue management.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
