@@ -31,27 +31,27 @@ export const ReferencePhotosModal: React.FC<ReferencePhotosModalProps> = ({ isOp
   ];
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-sm flex items-center justify-center p-2.5 sm:p-4">
       {/* Modal Dialog Frame - Always Signature Pine Green Card */}
       <div className="relative w-full max-w-4xl bg-gradient-to-b from-[#0a5450] to-[#073b38] text-white rounded-2xl shadow-2xl border-2 border-teal-400/40 overflow-hidden">
         {/* Header */}
-        <div className="bg-[#08423f] text-white p-5 flex items-center justify-between border-b border-teal-600/40">
-          <div>
-            <h3 className="text-lg font-bold tracking-tight">Physical Surgery Reference Signage</h3>
-            <p className="text-xs text-teal-200">
+        <div className="bg-[#08423f] text-white p-4 sm:p-5 flex items-center justify-between border-b border-teal-600/40">
+          <div className="min-w-0">
+            <h3 className="text-base sm:text-lg font-bold tracking-tight truncate">Surgery Photo Gallery</h3>
+            <p className="text-[11px] sm:text-xs text-teal-200 truncate">
               Dr M.N. Ntshangase General Practitioner Surgery · Umzimkhulu, KZN
             </p>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-teal-200 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg text-teal-200 hover:text-white hover:bg-white/10 transition-colors cursor-pointer shrink-0 ml-2"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Gallery */}
-        <div className="p-6 max-h-[75vh] overflow-y-auto space-y-6">
+        <div className="p-4 sm:p-6 max-h-[78vh] overflow-y-auto space-y-4 sm:space-y-6">
           <p className="text-xs text-teal-100/90 leading-relaxed">
             This digital platform was designed from the ground up to honor the exact visual identity, colors, typography, and circles motifs present on Dr Ntshangase's surgery building in Umzimkhulu.
           </p>

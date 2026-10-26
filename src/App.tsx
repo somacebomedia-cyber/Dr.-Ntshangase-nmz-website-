@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { UserRole, ClinicalService, Appointment } from './types';
-import { initializeStorage, getSurgeryOpenStatus } from './services/storage';
+import { UserRole, ClinicalService } from './types';
+import { initializeStorage } from './services/storage';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
+import { QuickBookingStrip } from './components/QuickBookingStrip';
 import { ServicesSection } from './components/ServicesSection';
+import { UrgentCareBanner } from './components/UrgentCareBanner';
+import { BillingInsuranceSection } from './components/BillingInsuranceSection';
+import { TestimonialsSection } from './components/TestimonialsSection';
+import { ClinicalTeamSection } from './components/ClinicalTeamSection';
 import { ConsultingHoursCard } from './components/ConsultingHoursCard';
 import { BookingWizard } from './components/BookingWizard';
 import { PatientPortal } from './components/PatientPortal';
@@ -11,25 +16,15 @@ import { ProviderDashboard } from './components/ProviderDashboard';
 import { ReferencePhotosModal } from './components/ReferencePhotosModal';
 import { OfflineBanner } from './components/OfflineBanner';
 import { Footer } from './components/Footer';
-import { CircleMotif, MedicalCrossIcon } from './components/CircleMotifs';
-import {
-  Calendar,
-  Clock,
-  ShieldCheck,
-  CheckCircle,
-  MapPin,
-  Phone,
-  Camera,
-  Heart,
-  UserCheck,
-  Activity,
-  ArrowRight
-} from 'lucide-react';
+import { CircleMotif } from './components/CircleMotifs';
+import { Camera, ArrowRight } from 'lucide-react';
+import { useLanguage } from './context/LanguageContext';
 
 export default function App() {
   const [currentRole, setCurrentRole] = useState<UserRole>('patient');
   const [currentView, setCurrentView] = useState<string>('home');
-  // Default to light mode (white background) so user immediately sees the pure white background with signature green cards
+  const { t, language } = useLanguage();
+
   const [isDark, setIsDark] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('dr_ntshangase_theme');
@@ -99,7 +94,7 @@ export default function App() {
 
   return (
     <div
-      className="min-h-screen flex flex-col transition-colors duration-200"
+      className="min-h-screen flex flex-col transition-colors duration-200 w-full max-w-full overflow-x-hidden"
       style={{
         backgroundColor: isDark ? '#061c1a' : '#ffffff',
         color: isDark ? '#f8fafc' : '#0f172a',
@@ -108,7 +103,7 @@ export default function App() {
       {/* Connectivity monitor */}
       <OfflineBanner />
 
-      {/* Top Navbar */}
+      {/* Top Navbar with English / Zulu Language Toggle */}
       <Navbar
         currentRole={currentRole}
         onRoleToggle={handleRoleToggle}
@@ -128,153 +123,172 @@ export default function App() {
         ) : currentView === 'portal' ? (
           <PatientPortal onOpenBooking={() => handleOpenBooking()} />
         ) : currentView === 'services' ? (
-          <div className="pt-6">
+          <div className="pt-2">
             <ServicesSection onSelectService={(s) => handleOpenBooking(s)} />
+            <BillingInsuranceSection onOpenBooking={() => handleOpenBooking()} />
           </div>
         ) : currentView === 'hours' ? (
-          <div className="py-16 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="max-w-2xl mx-auto text-center mb-10">
-              <span className="text-xs font-semibold text-teal-800 dark:text-teal-300 uppercase tracking-wider">
-                Official Surgery Operating Schedule
+          <div className="py-16 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+            <CircleMotif variant="ambient-orbs" />
+            <div className="max-w-2xl mx-auto text-center mb-10 relative z-10">
+              <span className="text-xs font-bold text-teal-800 dark:text-teal-300 uppercase tracking-widest">
+                {t.scheduleSection.kicker}
               </span>
               <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white mt-2">
-                Consulting Hours & Walk-in Access
+                {t.scheduleSection.title}
               </h2>
               <p className="text-sm text-slate-600 dark:text-slate-300 mt-2">
-                Recreated directly from the physical surgery board in Umzimkhulu.
+                {t.scheduleSection.body}
               </p>
             </div>
             <div className="max-w-md mx-auto">
               <ConsultingHoursCard onBookClick={() => handleOpenBooking()} />
             </div>
+
+            <div className="mt-12 text-center">
+              <button
+                onClick={() => setIsPhotosOpen(true)}
+                className="inline-flex items-center gap-2 text-xs font-semibold text-teal-700 dark:text-teal-300 hover:underline cursor-pointer"
+              >
+                <Camera className="w-4 h-4" />
+                <span>
+                  {language === 'zu'
+                    ? 'Igalari Yezithombe →'
+                    : 'Gallery →'}
+                </span>
+              </button>
+            </div>
           </div>
         ) : (
-          /* Public Homepage Overview */
+          /* Public Homepage Overview - Matching Reference Image Structure */
           <>
+            {/* 1. Hero Section: Headline "Exceptional Care, Every Time" + Arched Doctor Portal & Badges */}
             <Hero
               onOpenBooking={() => handleOpenBooking()}
               onOpenPhotos={() => setIsPhotosOpen(true)}
               onViewServices={() => handleNavigate('services')}
             />
 
-            {/* Quick Practice Highlights Strip - Green Cards on Page Background */}
-            <section className="border-y border-teal-900/10 dark:border-teal-500/15 py-8 transition-colors">
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 text-center">
-                  <div className="p-4 rounded-xl glass-panel space-y-1">
-                    <span className="text-2xl sm:text-3xl font-extrabold text-white font-mono">
-                      100%
-                    </span>
-                    <p className="text-xs font-bold text-teal-100">HIPAA & POPIA Encrypted</p>
-                    <p className="text-[11px] text-teal-200/80">Client-Side AES-GCM Privacy</p>
-                  </div>
-                  <div className="p-4 rounded-xl glass-panel space-y-1">
-                    <span className="text-2xl sm:text-3xl font-extrabold text-teal-200 font-mono">
-                      CMSA
-                    </span>
-                    <p className="text-xs font-bold text-teal-100">HIV Medicine Diploma</p>
-                    <p className="text-[11px] text-teal-200/80">Specialized ART & Care</p>
-                  </div>
-                  <div className="p-4 rounded-xl glass-panel space-y-1">
-                    <span className="text-2xl sm:text-3xl font-extrabold text-white font-mono">
-                      6 Days
-                    </span>
-                    <p className="text-xs font-bold text-teal-100">Weekly Consulting</p>
-                    <p className="text-[11px] text-teal-200/80">Mon–Fri 08–17h | Sat 08–13h</p>
-                  </div>
-                  <div className="p-4 rounded-xl glass-panel space-y-1">
-                    <span className="text-2xl sm:text-3xl font-extrabold text-teal-200 font-mono">
-                      Open
-                    </span>
-                    <p className="text-xs font-bold text-teal-100">Walk-ins Welcome</p>
-                    <p className="text-[11px] text-teal-200/80">Triage for Urgent Care</p>
-                  </div>
-                </div>
-              </div>
-            </section>
+            {/* 2. Row 2 in Reference: "Easily Book Your Doctor" Quick Action Cards */}
+            <QuickBookingStrip
+              onSelectService={(s) => handleOpenBooking(s)}
+              onOpenBooking={() => handleOpenBooking()}
+            />
 
-            {/* Specialized Clinical Services Bento Grid */}
+            {/* 3. Row 3 in Reference: "Facilities and Services" Interactive 2-Column Showcase */}
             <ServicesSection onSelectService={(s) => handleOpenBooking(s)} />
 
-            {/* Authentic Circles Design Motif Showcase Section */}
-            <section className="py-16 sm:py-20 relative overflow-hidden bg-gradient-to-b from-transparent via-teal-500/5 to-transparent">
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-                  <div className="lg:col-span-5 space-y-4">
-                    <span className="text-xs font-semibold text-teal-800 dark:text-teal-300 uppercase tracking-wider">
-                      Signature Architectural Motif
+            {/* 4. Row 4 in Reference: 24/7 Consultation & Walk-in Triage Full-Width Banner */}
+            <UrgentCareBanner
+              onOpenBooking={() => handleOpenBooking()}
+              onNavigateHours={() => handleNavigate('hours')}
+            />
+
+            {/* 5. Row 5 in Reference: Health Insurance & Billing Information */}
+            <BillingInsuranceSection onOpenBooking={() => handleOpenBooking()} />
+
+            {/* 6. Row 6 in Reference: Patient's Testimonials */}
+            <TestimonialsSection />
+
+            {/* 7. Row 7 in Reference: Meet Our Team */}
+            <ClinicalTeamSection
+              onOpenBooking={() => handleOpenBooking()}
+              onOpenPhotos={() => setIsPhotosOpen(true)}
+            />
+
+            {/* Practice Operating Schedule & Walk-in Access */}
+            <section className="py-16 sm:py-20 relative overflow-hidden bg-gradient-to-b from-white via-teal-50/40 to-white dark:from-[#061c1a] dark:via-teal-950/20 dark:to-[#061c1a] border-t border-slate-200/80 dark:border-teal-900/40">
+              {/* Background Random Floating Circles */}
+              <CircleMotif variant="ambient-orbs" />
+              <CircleMotif variant="scatter-right" />
+
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+                  <div className="lg:col-span-6 space-y-4">
+                    <span className="text-xs font-bold text-teal-800 dark:text-teal-300 uppercase tracking-widest">
+                      {t.scheduleSection.kicker}
                     </span>
-                    <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
-                      The Circles Motif: Rooted in Physical Identity
+                    <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 dark:text-white">
+                      {t.scheduleSection.title}
                     </h2>
-                    <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                      Every element of this platform honors the frosted glass graphics seen on Dr Ntshangase's surgery entrance doors in Umzimkhulu. The floating circles symbolize cellular vitality, holistic health, and continuous compassionate care across life stages.
+                    <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
+                      {t.scheduleSection.body}
                     </p>
-                    <div className="pt-2 flex items-center gap-3">
+
+                    <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full">
                       <button
                         onClick={() => setIsPhotosOpen(true)}
-                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0a5450] dark:text-teal-300 hover:underline cursor-pointer"
+                        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-3 text-xs font-bold text-teal-800 dark:text-teal-300 bg-teal-100 dark:bg-teal-900/50 hover:bg-teal-200 dark:hover:bg-teal-800/60 rounded-xl transition-colors cursor-pointer text-center"
                       >
-                        <Camera className="w-4 h-4" />
-                        <span>Compare With Physical Door Photo &rarr;</span>
+                        <Camera className="w-4 h-4 shrink-0" />
+                        <span>{t.scheduleSection.viewSignagePhotos}</span>
+                      </button>
+
+                      <button
+                        onClick={() => handleOpenBooking()}
+                        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-3 text-xs font-bold text-white bg-teal-600 hover:bg-teal-700 rounded-xl transition-colors cursor-pointer text-center"
+                      >
+                        <span>{t.scheduleSection.scheduleAppointment}</span>
+                        <ArrowRight className="w-3.5 h-3.5 shrink-0" />
                       </button>
                     </div>
                   </div>
 
-                  <div className="lg:col-span-7">
-                    <div className="p-6 sm:p-8 rounded-2xl glass-panel shadow-lg border border-teal-400/30">
-                      <CircleMotif variant="full" />
-                    </div>
+                  <div className="lg:col-span-6 flex justify-center">
+                    <ConsultingHoursCard onBookClick={() => handleOpenBooking()} />
                   </div>
                 </div>
               </div>
             </section>
 
-            {/* Quick Practice FAQs and Location Guide */}
-            <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-teal-900/10 dark:border-teal-500/15">
+            {/* Quick Practice FAQs */}
+            <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200/80 dark:border-teal-900/40">
               <div className="max-w-3xl mx-auto text-center mb-12">
-                <h3 className="text-2xl font-bold text-slate-900 dark:text-white">
-                  Patient Questions & Surgery Guidance
+                <span className="text-xs font-bold text-teal-800 dark:text-teal-300 uppercase tracking-widest">
+                  {t.faqs.kicker}
+                </span>
+                <h3 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mt-1">
+                  {t.faqs.title}
                 </h3>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">
-                  Key information for visiting Dr M.N. Ntshangase in Umzimkhulu.
+                  {t.faqs.subtitle}
                 </p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-                <div className="p-6 rounded-2xl glass-panel">
-                  <h4 className="font-bold text-white text-base">
-                    Can I walk in without an appointment?
+                <div className="p-6 rounded-2xl bg-[#f8fbfb] dark:bg-[#072d2a] border border-slate-200/80 dark:border-teal-900/40 shadow-xs">
+                  <h4 className="font-bold text-slate-900 dark:text-white text-sm sm:text-base">
+                    {t.faqs.q1}
                   </h4>
-                  <p className="text-xs text-teal-100/90 mt-2.5 leading-relaxed">
-                    Yes! As displayed on our surgery entrance plaque, walk-ins are warmly welcomed throughout all consulting hours (08:00–17:00 weekdays, 08:00–13:00 Saturdays). Walk-in patients are triaged at reception upon arrival.
+                  <p className="text-xs text-slate-600 dark:text-slate-300 mt-2 leading-relaxed">
+                    {t.faqs.a1}
                   </p>
                 </div>
 
-                <div className="p-6 rounded-2xl glass-panel">
-                  <h4 className="font-bold text-white text-base">
-                    What does the HIV Dip (CMSA) qualification mean?
+                <div className="p-6 rounded-2xl bg-[#f8fbfb] dark:bg-[#072d2a] border border-slate-200/80 dark:border-teal-900/40 shadow-xs">
+                  <h4 className="font-bold text-slate-900 dark:text-white text-sm sm:text-base">
+                    {t.faqs.q2}
                   </h4>
-                  <p className="text-xs text-teal-100/90 mt-2.5 leading-relaxed">
-                    Dr Ntshangase holds the prestigious Diploma in HIV Medicine from the Colleges of Medicine of South Africa (CMSA), certifying specialized clinical competence in antiretroviral therapy (ART), viral load suppression, and holistic immunological management.
+                  <p className="text-xs text-slate-600 dark:text-slate-300 mt-2 leading-relaxed">
+                    {t.faqs.a2}
                   </p>
                 </div>
 
-                <div className="p-6 rounded-2xl glass-panel">
-                  <h4 className="font-bold text-white text-base">
-                    How is my medical data protected online?
+                <div className="p-6 rounded-2xl bg-[#f8fbfb] dark:bg-[#072d2a] border border-slate-200/80 dark:border-teal-900/40 shadow-xs">
+                  <h4 className="font-bold text-slate-900 dark:text-white text-sm sm:text-base">
+                    {t.faqs.q3}
                   </h4>
-                  <p className="text-xs text-teal-100/90 mt-2.5 leading-relaxed">
-                    We employ client-side Web Crypto API AES-GCM (256-bit) encryption. All clinical notes and symptoms are encrypted in your local browser before persistence, fulfilling both HIPAA and South Africa POPIA requirements.
+                  <p className="text-xs text-slate-600 dark:text-slate-300 mt-2 leading-relaxed">
+                    {t.faqs.a3}
                   </p>
                 </div>
 
-                <div className="p-6 rounded-2xl glass-panel">
-                  <h4 className="font-bold text-white text-base">
-                    What should I bring to my consultation?
+                <div className="p-6 rounded-2xl bg-[#f8fbfb] dark:bg-[#072d2a] border border-slate-200/80 dark:border-teal-900/40 shadow-xs">
+                  <h4 className="font-bold text-slate-900 dark:text-white text-sm sm:text-base">
+                    {t.faqs.q4}
                   </h4>
-                  <p className="text-xs text-teal-100/90 mt-2.5 leading-relaxed">
-                    Please bring your South African ID card or passport, your digital appointment pass (saved on your phone or printed), medical aid card if applicable, and all current medications or chronic treatment cards.
+                  <p className="text-xs text-slate-600 dark:text-slate-300 mt-2 leading-relaxed">
+                    {t.faqs.a4}
                   </p>
                 </div>
               </div>

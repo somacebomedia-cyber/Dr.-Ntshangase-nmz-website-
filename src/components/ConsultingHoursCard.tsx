@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getSurgeryOpenStatus } from '../services/storage';
 import { Clock, CheckCircle2, AlertCircle } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 interface ConsultingHoursCardProps {
   onBookClick?: () => void;
@@ -12,6 +13,7 @@ export const ConsultingHoursCard: React.FC<ConsultingHoursCardProps> = ({
   className = '',
 }) => {
   const [status, setStatus] = useState(getSurgeryOpenStatus());
+  const { t, language } = useLanguage();
 
   useEffect(() => {
     // Refresh status every 60 seconds
@@ -42,7 +44,7 @@ export const ConsultingHoursCard: React.FC<ConsultingHoursCardProps> = ({
         {/* Top Header Banner: CONSULTING HOURS */}
         <div className="bg-[#08423f] py-4 px-6 text-center border-b border-teal-600/40">
           <h3 className="text-xl sm:text-2xl font-extrabold tracking-wider text-white uppercase font-sans">
-            CONSULTING HOURS
+            {t.hoursCard.bannerTitle}
           </h3>
         </div>
 
@@ -51,7 +53,7 @@ export const ConsultingHoursCard: React.FC<ConsultingHoursCardProps> = ({
           {/* Monday - Friday */}
           <div className="space-y-1">
             <h4 className="text-xs sm:text-sm font-bold text-teal-200 tracking-wider uppercase">
-              MONDAY – FRIDAY
+              {t.hoursCard.monFri}
             </h4>
             <p className="text-2xl sm:text-3xl font-extrabold text-white font-mono tabular-nums tracking-tight">
               08:00 – 17:00
@@ -63,7 +65,7 @@ export const ConsultingHoursCard: React.FC<ConsultingHoursCardProps> = ({
           {/* Saturday */}
           <div className="space-y-1">
             <h4 className="text-xs sm:text-sm font-bold text-teal-200 tracking-wider uppercase">
-              SATURDAY
+              {t.hoursCard.saturday}
             </h4>
             <p className="text-2xl sm:text-3xl font-extrabold text-white font-mono tabular-nums tracking-tight">
               08:00 – 13:00
@@ -75,10 +77,10 @@ export const ConsultingHoursCard: React.FC<ConsultingHoursCardProps> = ({
           {/* Sunday & Public Holidays */}
           <div className="space-y-1">
             <h4 className="text-xs sm:text-sm font-bold text-teal-300/80 tracking-wider uppercase">
-              SUNDAY & PUBLIC HOLIDAYS
+              {t.hoursCard.sundayHolidays}
             </h4>
             <p className="text-xl sm:text-2xl font-extrabold text-rose-300 tracking-wide font-mono">
-              CLOSED
+              {t.hoursCard.closed}
             </p>
           </div>
         </div>
@@ -86,26 +88,26 @@ export const ConsultingHoursCard: React.FC<ConsultingHoursCardProps> = ({
         {/* Bottom Banner: Walk-ins Welcome */}
         <div className="bg-[#08423f] py-3.5 px-6 text-center border-t border-teal-600/40">
           <p className="text-sm sm:text-base font-bold text-teal-100 tracking-wide">
-            Walk-ins Welcome Daily
+            {t.hoursCard.walkinsWelcome}
           </p>
         </div>
       </div>
 
-      {/* Real-time Status Badge below the sign - Green Card */}
-      <div className="mt-4 p-3 rounded-xl bg-gradient-to-r from-[#0a5450] to-[#073b38] border border-teal-400/30 shadow-md flex items-center justify-between gap-3 text-xs text-white">
-        <div className="flex items-center gap-2">
+      {/* Real-time Status Badge below the sign */}
+      <div className="mt-4 p-3 rounded-xl bg-gradient-to-r from-[#0a5450] to-[#073b38] border border-teal-400/30 shadow-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 text-xs text-white">
+        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
           {status.isOpen ? (
-            <span className="flex items-center gap-1.5 text-emerald-300 font-semibold">
+            <span className="flex items-center gap-1.5 text-emerald-300 font-semibold shrink-0">
               <CheckCircle2 className="w-4 h-4 text-emerald-300" />
-              <span>Surgery Open Now</span>
+              <span>{t.hoursCard.openNow}</span>
             </span>
           ) : (
-            <span className="flex items-center gap-1.5 text-amber-300 font-semibold">
+            <span className="flex items-center gap-1.5 text-amber-300 font-semibold shrink-0">
               <AlertCircle className="w-4 h-4 text-amber-300" />
-              <span>Currently Closed</span>
+              <span>{t.hoursCard.closedNow}</span>
             </span>
           )}
-          <span className="text-teal-400">·</span>
+          <span className="text-teal-400 hidden sm:inline">·</span>
           <span className="text-teal-100 font-medium">
             {status.nextOpenNotice}
           </span>
@@ -114,9 +116,9 @@ export const ConsultingHoursCard: React.FC<ConsultingHoursCardProps> = ({
         {onBookClick && (
           <button
             onClick={onBookClick}
-            className="text-xs font-semibold text-teal-200 hover:text-white hover:underline shrink-0 cursor-pointer"
+            className="text-xs font-semibold text-teal-200 hover:text-white hover:underline shrink-0 cursor-pointer self-end sm:self-auto pt-1 sm:pt-0"
           >
-            Select Slot &rarr;
+            {t.hoursCard.selectSlot} &rarr;
           </button>
         )}
       </div>

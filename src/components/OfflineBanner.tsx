@@ -8,7 +8,7 @@ export const OfflineBanner: React.FC = () => {
   if (isOnline) return null;
 
   return (
-    <div className="fixed bottom-4 left-4 z-50 max-w-sm rounded-xl bg-amber-600 text-white p-3.5 shadow-xl border border-amber-500/50 flex items-start gap-3 text-xs animate-in slide-in-from-bottom duration-300">
+    <div className="fixed bottom-4 left-4 right-4 sm:right-auto sm:max-w-sm z-50 rounded-xl bg-amber-600 text-white p-3.5 shadow-xl border border-amber-500/50 flex items-start gap-3 text-xs animate-in slide-in-from-bottom duration-300">
       <WifiOff className="w-4 h-4 shrink-0 mt-0.5" />
       <div>
         <p className="font-bold">Offline Mode Active</p>

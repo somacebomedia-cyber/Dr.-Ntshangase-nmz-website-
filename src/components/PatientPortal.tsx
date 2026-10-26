@@ -121,7 +121,11 @@ Consulting Hours: Mon-Fri 08:00-17:00, Sat 08:00-13:00
   };
 
   return (
-    <div className="py-12 sm:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="py-12 sm:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      {/* Background Floating Circles Motif */}
+      <CircleMotif variant="ambient-orbs" />
+      <CircleMotif variant="scatter-right" />
+
       {/* Portal Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 pb-6 border-b border-teal-900/10 dark:border-teal-500/20">
         <div>
@@ -141,14 +145,14 @@ Consulting Hours: Mon-Fri 08:00-17:00, Sat 08:00-13:00
         </div>
 
         {/* Demo Patient Profile Switcher - Green Card */}
-        <div className="flex items-center gap-2.5 bg-gradient-to-r from-[#0a5450] to-[#073b38] text-white p-2.5 rounded-xl border border-teal-400/40 shadow-sm shrink-0">
-          <User className="w-4 h-4 text-teal-200" />
-          <div className="flex flex-col text-xs">
+        <div className="flex items-center gap-2.5 bg-gradient-to-r from-[#0a5450] to-[#073b38] text-white p-2.5 rounded-xl border border-teal-400/40 shadow-sm shrink-0 w-full sm:w-auto">
+          <User className="w-4 h-4 text-teal-200 shrink-0" />
+          <div className="flex flex-col text-xs min-w-0 flex-1">
             <span className="text-[10px] text-teal-200 uppercase tracking-wider font-semibold">Active Profile:</span>
             <select
               value={selectedPatientId}
               onChange={(e) => setSelectedPatientId(e.target.value)}
-              className="font-bold text-white bg-transparent border-none focus:outline-none cursor-pointer"
+              className="font-bold text-white bg-transparent border-none focus:outline-none cursor-pointer truncate max-w-full"
             >
               {patients.map((p) => (
                 <option key={p.id} value={p.id} className="bg-[#073b38] text-white">
@@ -225,12 +229,12 @@ Consulting Hours: Mon-Fri 08:00-17:00, Sat 08:00-13:00
       )}
 
       {/* Portal Tabs Bar */}
-      <div className="flex items-center gap-2 mb-6 border-b border-teal-900/10 dark:border-teal-500/20 pb-2">
+      <div className="flex items-center gap-2 mb-6 border-b border-teal-900/10 dark:border-teal-500/20 pb-2 overflow-x-auto no-scrollbar max-w-full">
         <button
           onClick={() => setActiveTab('appointments')}
-          className={`px-4 py-2 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
+          className={`px-4 py-2 text-xs font-semibold rounded-lg transition-colors cursor-pointer shrink-0 whitespace-nowrap ${
             activeTab === 'appointments'
-              ? 'bg-[#0a5450] text-white shadow-xs'
+              ? 'bg-[#0a5450] text-white shadow-xs font-bold'
               : 'text-slate-600 dark:text-slate-300 hover:bg-teal-50 dark:hover:bg-teal-900/30'
           }`}
         >
@@ -238,9 +242,9 @@ Consulting Hours: Mon-Fri 08:00-17:00, Sat 08:00-13:00
         </button>
         <button
           onClick={() => setActiveTab('prescriptions')}
-          className={`px-4 py-2 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
+          className={`px-4 py-2 text-xs font-semibold rounded-lg transition-colors cursor-pointer shrink-0 whitespace-nowrap ${
             activeTab === 'prescriptions'
-              ? 'bg-[#0a5450] text-white shadow-xs'
+              ? 'bg-[#0a5450] text-white shadow-xs font-bold'
               : 'text-slate-600 dark:text-slate-300 hover:bg-teal-50 dark:hover:bg-teal-900/30'
           }`}
         >
@@ -248,9 +252,9 @@ Consulting Hours: Mon-Fri 08:00-17:00, Sat 08:00-13:00
         </button>
         <button
           onClick={() => setActiveTab('records')}
-          className={`px-4 py-2 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
+          className={`px-4 py-2 text-xs font-semibold rounded-lg transition-colors cursor-pointer shrink-0 whitespace-nowrap ${
             activeTab === 'records'
-              ? 'bg-[#0a5450] text-white shadow-xs'
+              ? 'bg-[#0a5450] text-white shadow-xs font-bold'
               : 'text-slate-600 dark:text-slate-300 hover:bg-teal-50 dark:hover:bg-teal-900/30'
           }`}
         >

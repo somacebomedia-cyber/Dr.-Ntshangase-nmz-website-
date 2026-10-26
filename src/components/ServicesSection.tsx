@@ -1,127 +1,357 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { CLINICAL_SERVICES } from '../services/storage';
-import { Stethoscope, ShieldCheck, Activity, Bandage, HeartPulse, ArrowRight } from 'lucide-react';
+import {
+  Stethoscope,
+  ShieldCheck,
+  Activity,
+  Bandage,
+  HeartPulse,
+  ArrowRight,
+  CheckCircle2,
+  Clock,
+  Sparkles,
+  Award,
+} from 'lucide-react';
 import { ClinicalService } from '../types';
+import { CircleMotif } from './CircleMotifs';
+import { useLanguage } from '../context/LanguageContext';
 
 interface ServicesSectionProps {
   onSelectService: (service: ClinicalService) => void;
 }
 
 export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectService }) => {
-  const getIcon = (name: string) => {
-    switch (name) {
+  const [activeServiceId, setActiveServiceId] = useState<string>(CLINICAL_SERVICES[0].id);
+  const { t, language } = useLanguage();
+
+  const activeService =
+    CLINICAL_SERVICES.find((s) => s.id === activeServiceId) || CLINICAL_SERVICES[0];
+
+  const getIcon = (iconName: string, className = 'w-5 h-5') => {
+    switch (iconName) {
       case 'Stethoscope':
-        return <Stethoscope className="w-5 h-5 text-teal-700 dark:text-teal-300" />;
+        return <Stethoscope className={className} />;
       case 'ShieldCheck':
-        return <ShieldCheck className="w-5 h-5 text-teal-700 dark:text-teal-300" />;
+        return <ShieldCheck className={className} />;
       case 'Activity':
-        return <Activity className="w-5 h-5 text-teal-700 dark:text-teal-300" />;
+        return <Activity className={className} />;
       case 'Bandage':
-        return <Bandage className="w-5 h-5 text-teal-700 dark:text-teal-300" />;
+        return <Bandage className={className} />;
       default:
-        return <HeartPulse className="w-5 h-5 text-teal-700 dark:text-teal-300" />;
+        return <HeartPulse className={className} />;
     }
   };
 
+  // Facility-specific rich metadata with English & isiZulu localizations
+  const facilityDetails: Record<
+    string,
+    {
+      titleZu: string;
+      features: string[];
+      featuresZu: string[];
+      equipment: string;
+      equipmentZu: string;
+      clinicalScope: string;
+      clinicalScopeZu: string;
+      imageLabel: string;
+      imageLabelZu: string;
+      imageSrc: string;
+    }
+  > = {
+    'gen-consult': {
+      titleZu: 'Ukubonana Okujwayelekile Nodokotela',
+      features: [
+        'Full systemic clinical examination (vitals, ENT, chest & abdomen)',
+        'Differential diagnosis and customized prescription protocol',
+        'Direct referrals to district and regional hospital specialists if required',
+        'Official medical certificates, sick notes & insurance completion',
+      ],
+      featuresZu: [
+        'Ukuhlolwa komzimba okuphelele (umfutho wegazi, izindlebe, umphimbo, isifuba & nesisu)',
+        'Ukutholakala kwesifo nemiyalelo yemithi elungiselelwe isiguli',
+        'Ukudluliselwa ngqo kodokotela abayizazi ezibhedlela zesifunda uma kunesidingo',
+        'Izitifiketi zokugula ezisemthethweni, izincwadi zasesibhedlela namafomu omshwalense',
+      ],
+      equipment: 'Welch Allyn Diagnostic Set, Digital ECG & SpO2 Monitor',
+      equipmentZu: 'Isethi Yokuhlola Yakwa-Welch Allyn, i-Digital ECG ne-SpO2 Monitor',
+      clinicalScope: 'Adult & pediatric acute illnesses, infections, physical check-ups',
+      clinicalScopeZu: 'Ukugula okubucayi kwabantu abadala nezingane, izifo ezithathelwanayo, nokuhlola impilo',
+      imageLabel: 'Consulting Room 1 · Dr M.N. Ntshangase',
+      imageLabelZu: 'Igumbi Lokubonisana 1 · UDkt M.N. Ntshangase',
+      imageSrc: '/src/assets/images/facility_medical_room_1793007986328.jpg',
+    },
+    'hiv-care': {
+      titleZu: 'Umtholampilo We-HIV Nemithi ye-ART',
+      features: [
+        'Confidential CD4 count & viral load monitoring management',
+        'Antiretroviral therapy (ART) initiation, switching & side-effect mitigation',
+        'Pre-exposure & Post-exposure prophylaxis (PrEP & PEP)',
+        'Management of opportunistic infections & immunological support',
+      ],
+      featuresZu: [
+        'Ukubalwa kwamasosha omzimba (CD4) nokuhlola ukuthi igciwane linciphe kangakanani (Viral Load)',
+        'Ukuqalisa imithi ye-ART, ukuyishintsha nokuvikela imiphumela engemihle',
+        'Ukuvikelwa ngaphambi nangemuva kokuchayeka egciwaneni (PrEP & PEP)',
+        'Ukwelashwa kwezifo ezihlasela amasosha aphelile nokusekela amasosha',
+      ],
+      equipment: 'Direct Phlebotomy Station & Confidential Rapid Testing Desk',
+      equipmentZu: 'Isiteshi Sokudonsa Igazi & Nedeski Lokuhlola Okusheshayo Eliyimfihlo',
+      clinicalScope: 'Comprehensive HIV Medicine certified by CMSA (Colleges of Medicine SA)',
+      clinicalScopeZu: 'Imithi ye-HIV ephelele eqinisekiswe yi-CMSA (Colleges of Medicine SA)',
+      imageLabel: 'Specialized Immunology Clinic Suite',
+      imageLabelZu: 'Ikamelo Elikhethekile Lokwelapha Amasosha Omzimba',
+      imageSrc: '/src/assets/images/clinical_consultation_care_1793007987133.jpg',
+    },
+    'chronic-mgmt': {
+      titleZu: 'Ukunakekelwa Kwezifo Ezingamahlalakhona',
+      features: [
+        'Hypertension (high blood pressure) titration and cardiovascular screening',
+        'Type 1 & Type 2 Diabetes management (HbA1c monitoring & dietary guidance)',
+        'Asthma, COPD, epilepsy, and arthritis chronic script renewal',
+        'Routine organ function monitoring (kidney, liver, and lipids)',
+      ],
+      featuresZu: [
+        'Umfutho wegazi ophezulu nokuhlolwa kwenhliziyo nemithambo',
+        'Ukwelashwa koshukela (Type 1 & Type 2, HbA1c kanye nesiqondiso sokudla)',
+        'Isifuba somoya (Asthma), isithuthwane, nesifo samalunga (Arthritis) nokuvuselelwa kwemiyalelo',
+        'Ukuhlolwa kokusebenza kwezinso, isibindi, kanye namafutha egazini',
+      ],
+      equipment: 'Automated Omron BP Monitors & Point-of-Care Glucometers',
+      equipmentZu: 'Imishini Yakwa-Omron Yokuhlola Umfutho Neglucose Yokuhlola Ushukela',
+      clinicalScope: 'Long-term health preservation, lifestyle coaching, and chronic stability',
+      clinicalScopeZu: 'Ukugcina impilo yesikhathi eside, isiqondiso sempilo, nokuzinza kwezifo',
+      imageLabel: 'Chronic Care & Vital Signs Assessment Wing',
+      imageLabelZu: 'Isigceme Sokuhlolwa Kwezifo Ezingamahlalakhona',
+      imageSrc: '/src/assets/images/clinical_consultation_care_1793007987133.jpg',
+    },
+    'wound-care': {
+      titleZu: 'Ukuhlinza Okuncane & Nokubopha Amanxeba',
+      features: [
+        'Sterile suture closure of traumatic lacerations and cuts',
+        'Post-operative wound dressing, suture removal & drain monitoring',
+        'Diabetic foot ulcer debridement & non-healing chronic wound therapy',
+        'Minor surgical excision of superficial cysts, abscess incision & drainage',
+      ],
+      featuresZu: [
+        'Ukuthunga amanxeba okuhlanzekile ngenxa yokulimala nokusikwa',
+        'Ukubopha amanxeba ngemuva kokuhlinzwa, ukukhipha imithungo nokuhlola',
+        'Ukwelashwa kwamanxeba ezinyawo zoshukela angenzeki kalula',
+        'Ukukhishwa kwezinsumpa ezincane, ukuchoba amathumba nokukhipha ubomvu',
+      ],
+      equipment: 'Autoclave Sterilization Unit & Medical Minor Surgery Surgical Tray',
+      equipmentZu: 'Umshini Wokuhlanza i-Autoclave Ne-Tray Yokuhlinza Okuncane',
+      clinicalScope: 'Aseptic minor surgery, wound dressing, and burn treatment',
+      clinicalScopeZu: 'Ukuhlinza okuncane okuhlanzekile, ukubopha amanxeba, nokwelapha ukusha',
+      imageLabel: 'Sterile Minor Surgery & Procedure Theatre',
+      imageLabelZu: 'Igumbi Lokuhlinza Okuncane Okuhlanzekile',
+      imageSrc: '/src/assets/images/facility_medical_room_1793007986328.jpg',
+    },
+    'rapid-screen': {
+      titleZu: 'Ukuhlola Okusheshayo Kwaselabhorethri',
+      features: [
+        'Rapid blood glucose, cholesterol & urine dipstick testing',
+        'Pregnancy testing & early antenatal wellness screening',
+        'HIV 1/2 rapid antibody diagnostic testing with pre/post-counseling',
+        'Instant results and personalized clinical action plan within 15 minutes',
+      ],
+      featuresZu: [
+        'Ukuhlolwa koshukela wegazi, i-cholesterol nomchamo ngokushesha',
+        'Ukuhlolwa kokukhulelwa nokunakekelwa kokuqala kukamama osakhulelwe',
+        'Ukuhlolwa okusheshayo kwe-HIV nokwelulekwa ngaphambi nangemuva',
+        'Imiphumela esheshayo nohlelo lokwelashwa phakathi kwemizuzu engu-15',
+      ],
+      equipment: 'Certified Rapid Diagnostic Kits & Centrifuge',
+      equipmentZu: 'Izinsiza Zokuhlola Ezivunyelwe ne-Centrifuge',
+      clinicalScope: 'Immediate point-of-care diagnostics for rapid clinical decision making',
+      clinicalScopeZu: 'Ukuhlola okusheshayo khona lapho ukuze kuthathwe izinqumo zokwelapha ngokushesha',
+      imageLabel: 'On-Site Diagnostic Testing Laboratory',
+      imageLabelZu: 'ILabhorethri Yokuhlola Yasendaweni',
+      imageSrc: '/src/assets/images/facility_medical_room_1793007986328.jpg',
+    },
+  };
+
+  const details = facilityDetails[activeService.id] || facilityDetails['gen-consult'];
+  const activeTitle = language === 'zu' ? details.titleZu : activeService.title;
+  const activeScope = language === 'zu' ? details.clinicalScopeZu : details.clinicalScope;
+  const activeFeatures = language === 'zu' ? details.featuresZu : details.features;
+  const activeEquipment = language === 'zu' ? details.equipmentZu : details.equipment;
+  const activeImageLabel = language === 'zu' ? details.imageLabelZu : details.imageLabel;
+
   return (
-    <section id="services" className="py-16 sm:py-24 relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="services" className="py-16 sm:py-24 bg-white dark:bg-[#061c1a] transition-colors relative overflow-hidden">
+      {/* Background Random Floating Circles */}
+      <CircleMotif variant="scatter-right" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <div className="max-w-3xl mb-12 sm:mb-16">
-          <div className="flex items-center gap-2 text-xs font-semibold tracking-wider text-teal-800 dark:text-teal-300 uppercase">
-            <span>Primary Care Surgery</span>
-            <span aria-hidden="true">·</span>
-            <span>Comprehensive Medicine</span>
-            <span aria-hidden="true">·</span>
-            <span>Umzimkhulu Hub</span>
+          <div className="flex items-center gap-2 text-xs font-bold tracking-wider text-teal-800 dark:text-teal-300 uppercase">
+            <span>{t.facilities.kicker}</span>
           </div>
-          <h2 className="mt-3 text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-            Specialized Clinical Services & Surgical Procedures
+          <h2 className="mt-2 text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+            {t.facilities.title}
           </h2>
-          <p className="mt-4 text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
-            Delivering dedicated healthcare by Dr M.N. Ntshangase, backed by an MBChB and CMSA HIV Medicine Diploma. Each consultation ensures dignity, clinical accuracy, and strict patient privacy.
+          <p className="mt-3 text-base text-slate-600 dark:text-slate-300 leading-relaxed">
+            {t.facilities.subtitle}
           </p>
         </div>
 
-        {/* Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {CLINICAL_SERVICES.map((service, idx) => {
-            const isMarquee = service.id === 'hiv-care' || service.id === 'gen-consult';
+        {/* 2-Column Interactive Facilities Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* Left Column: Vertical Category Navigation */}
+          <div className="lg:col-span-4 space-y-2.5">
+            {CLINICAL_SERVICES.map((service) => {
+              const isActive = service.id === activeServiceId;
+              const svcDetails = facilityDetails[service.id];
+              const svcTitle = language === 'zu' && svcDetails ? svcDetails.titleZu : service.title;
 
-            return (
-              <div
-                key={service.id}
-                className={`group relative rounded-2xl p-6 sm:p-8 flex flex-col justify-between transition-all duration-300 glass-panel glass-card-hover ${
-                  isMarquee ? 'lg:col-span-1 border-teal-600/30 dark:border-teal-400/30 ring-1 ring-teal-500/10' : ''
-                }`}
-              >
-                <div>
-                  {/* Top metadata unboxed */}
-                    <div className="flex items-center justify-between mb-4">
-                    <div className="w-10 h-10 rounded-xl bg-teal-900/60 border border-teal-400/30 flex items-center justify-center">
+              return (
+                <button
+                  key={service.id}
+                  onClick={() => setActiveServiceId(service.id)}
+                  className={`w-full p-4 rounded-xl flex items-center justify-between transition-all text-left cursor-pointer ${
+                    isActive
+                      ? 'bg-teal-600 text-white shadow-md font-semibold'
+                      : 'bg-[#f8fbfb] dark:bg-[#072d2a] text-slate-700 dark:text-slate-200 hover:bg-teal-50 dark:hover:bg-teal-900/40 border border-slate-200/80 dark:border-teal-700/40'
+                  }`}
+                >
+                  <div className="flex items-center gap-3.5">
+                    <div
+                      className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${
+                        isActive
+                          ? 'bg-white/20 text-white'
+                          : 'bg-white dark:bg-teal-950/60 text-teal-700 dark:text-teal-300 border border-slate-200 dark:border-teal-700/40'
+                      }`}
+                    >
                       {getIcon(service.icon)}
                     </div>
-                    <div className="flex items-center gap-2 text-xs font-medium text-teal-200">
-                      <span>{service.durationMinutes} mins</span>
-                      {service.badge && (
-                        <>
-                          <span aria-hidden="true">·</span>
-                          <span className="font-bold text-teal-200">{service.badge}</span>
-                        </>
-                      )}
+                    <div>
+                      <h4 className="text-sm font-bold tracking-tight">
+                        {svcTitle}
+                      </h4>
+                      <p
+                        className={`text-xs mt-0.5 ${
+                          isActive ? 'text-teal-100' : 'text-slate-500 dark:text-slate-400'
+                        }`}
+                      >
+                        {service.durationMinutes} {language === 'zu' ? 'imizuzu' : 'mins'} · {service.badge || (language === 'zu' ? 'Ukubonisana' : 'Consultation')}
+                      </p>
                     </div>
                   </div>
-
-                  {/* Title & Subtitle */}
-                  <h3 className="text-xl font-bold text-white group-hover:text-teal-200 transition-colors">
-                    {service.title}
-                  </h3>
-                  <p className="mt-1 text-xs font-medium text-teal-200">
-                    {service.subtitle}
-                  </p>
-
-                  {/* Description */}
-                  <p className="mt-4 text-sm text-teal-50/90 leading-relaxed">
-                    {service.description}
-                  </p>
-                </div>
-
-                {/* Bottom Action Button */}
-                <div className="mt-8 pt-4 border-t border-teal-600/40 flex items-center justify-between">
-                  <span className="text-xs text-teal-200/90">
-                    In-person consultation
+                  <span className={`text-sm ${isActive ? 'text-white' : 'text-slate-400'}`}>
+                    &rarr;
                   </span>
-                  <button
-                    onClick={() => onSelectService(service)}
-                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-white hover:text-teal-200 transition-colors cursor-pointer group-hover:translate-x-0.5"
-                  >
-                    <span>Schedule Visit</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </div>
-            );
-          })}
+                </button>
+              );
+            })}
 
-          {/* Quick Walk-In & Emergency Info Box (matching physical surgery notice) */}
-          <div className="rounded-2xl p-6 sm:p-8 flex flex-col justify-between bg-gradient-to-br from-[#0a5450] to-[#073b38] text-white shadow-lg">
-            <div>
-              <div className="flex items-center gap-2 text-xs font-medium text-teal-200/90 uppercase tracking-wider mb-3">
-                <span>Immediate Care</span>
-                <span aria-hidden="true">·</span>
-                <span>No Booking Required</span>
-              </div>
-              <h3 className="text-xl sm:text-2xl font-bold tracking-tight">
-                Walk-ins Welcome Daily
-              </h3>
-              <p className="mt-3 text-sm text-teal-100/90 leading-relaxed">
-                Acute distress, sudden trauma, or fever? You can walk directly into our surgery in Umzimkhulu during consulting hours. Patients are triaged promptly upon arrival.
+            {/* Quick Walk-in Note */}
+            <div className="p-4 rounded-xl bg-teal-50 dark:bg-teal-950/40 border border-teal-200 dark:border-teal-800/40 text-xs text-teal-900 dark:text-teal-200">
+              <span className="font-bold block">{t.facilities.walkinNoticeTitle}</span>
+              <p className="mt-1 text-[11px] text-teal-800/90 dark:text-teal-300">
+                {t.facilities.walkinNoticeBody}
               </p>
             </div>
+          </div>
 
-            <div className="mt-6 pt-4 border-t border-teal-700/60 text-xs flex items-center justify-between">
-              <span className="text-teal-200 font-mono">08:00 – 17:00 Weekdays</span>
-              <span className="text-teal-200 font-mono">08:00 – 13:00 Sat</span>
+          {/* Right Column: Detailed Showcase Card with Clinical Photography */}
+          <div className="lg:col-span-8 p-4 sm:p-6 lg:p-8 rounded-2xl bg-white dark:bg-[#072d2a] border border-slate-200 dark:border-teal-500/30 shadow-lg">
+            {/* Visual Photo Header with Badge */}
+            <div className="relative aspect-16/9 rounded-xl overflow-hidden shadow-md mb-6 group">
+              <img
+                src={details.imageSrc}
+                alt={activeImageLabel}
+                referrerPolicy="no-referrer"
+                className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-500"
+              />
+
+              {/* Scrim Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#062421]/90 via-[#062421]/40 to-transparent flex flex-col justify-between p-6">
+                <div className="flex justify-end">
+                  <div className="bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold text-white border border-white/30 flex items-center gap-1.5 shadow-sm">
+                    <Sparkles className="w-3.5 h-3.5 text-teal-200" />
+                    <span>{activeImageLabel}</span>
+                  </div>
+                </div>
+
+                <div>
+                  <span className="text-xs font-bold text-teal-300 uppercase tracking-wider">
+                    {t.facilities.scopeLabel}
+                  </span>
+                  <h3 className="text-2xl sm:text-3xl font-extrabold text-white mt-0.5">
+                    {activeTitle}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-teal-100 mt-1 max-w-xl">
+                    {activeScope}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Clinical Overview Content */}
+            <div className="space-y-6">
+              <div>
+                <h4 className="text-base font-bold text-slate-900 dark:text-white">
+                  {t.facilities.procedureHeader}
+                </h4>
+                <p className="text-sm text-slate-600 dark:text-slate-300 mt-2 leading-relaxed">
+                  {t.facilities.procedureDesc}
+                </p>
+              </div>
+
+              {/* Specific Clinical Features Checklist */}
+              <div>
+                <h5 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3">
+                  {t.facilities.includedHeader}
+                </h5>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {activeFeatures.map((feature, idx) => (
+                    <div
+                      key={idx}
+                      className="flex items-start gap-2.5 p-3 rounded-lg bg-[#f8fbfb] dark:bg-[#052422] border border-slate-100 dark:border-teal-900/50"
+                    >
+                      <CheckCircle2 className="w-4 h-4 text-teal-600 dark:text-teal-400 shrink-0 mt-0.5" />
+                      <span className="text-xs text-slate-700 dark:text-slate-300 leading-snug">
+                        {feature}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Clinical Equipment & Diagnostics Note */}
+              <div className="p-4 rounded-xl bg-slate-50 dark:bg-teal-950/30 border border-slate-200/80 dark:border-teal-800/40 flex flex-wrap items-center justify-between gap-4 text-xs">
+                <div>
+                  <span className="font-bold text-slate-800 dark:text-slate-200 block">
+                    {t.facilities.equipmentHeader}
+                  </span>
+                  <span className="text-slate-600 dark:text-slate-400">
+                    {activeEquipment}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 text-teal-700 dark:text-teal-300 font-semibold">
+                  <Award className="w-4 h-4" />
+                  <span>{t.facilities.standardsLabel}</span>
+                </div>
+              </div>
+
+              {/* Bottom Actions */}
+              <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 border-t border-slate-200/80 dark:border-teal-900/50">
+                <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+                  <Clock className="w-4 h-4 text-teal-600 dark:text-teal-400 shrink-0" />
+                  <span>
+                    {t.facilities.estimatedTime}: <strong>{activeService.durationMinutes} {language === 'zu' ? 'Imizuzu' : 'Minutes'}</strong>
+                  </span>
+                </div>
+
+                <button
+                  onClick={() => onSelectService(activeService)}
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 dark:bg-teal-600 dark:hover:bg-teal-500 rounded-xl shadow-md transition-all cursor-pointer text-center"
+                >
+                  <span>{t.facilities.scheduleBtn}</span>
+                  <ArrowRight className="w-4 h-4 shrink-0" />
+                </button>
+              </div>
             </div>
           </div>
         </div>

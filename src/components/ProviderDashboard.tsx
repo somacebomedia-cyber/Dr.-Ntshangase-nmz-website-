@@ -9,7 +9,7 @@ import {
   getSurgeryOpenStatus,
 } from '../services/storage';
 import { encryptHealthData, decryptHealthData } from '../services/crypto';
-import { MedicalCrossIcon } from './CircleMotifs';
+import { MedicalCrossIcon, CircleMotif } from './CircleMotifs';
 import {
   Calendar,
   Clock,
@@ -164,7 +164,11 @@ export const ProviderDashboard: React.FC = () => {
   };
 
   return (
-    <div className="py-12 sm:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="py-12 sm:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      {/* Background Floating Circles Motif */}
+      <CircleMotif variant="ambient-orbs" />
+      <CircleMotif variant="scatter-left" />
+
       {/* Dashboard Top Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 pb-6 border-b border-teal-900/10 dark:border-teal-500/20">
         <div>
@@ -250,12 +254,12 @@ export const ProviderDashboard: React.FC = () => {
 
       {/* Tabs and Controls Bar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar max-w-full">
           <button
             onClick={() => setActiveTab('queue')}
-            className={`px-4 py-2 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
+            className={`px-4 py-2 text-xs font-semibold rounded-lg transition-colors cursor-pointer shrink-0 whitespace-nowrap ${
               activeTab === 'queue'
-                ? 'bg-[#0a5450] text-white shadow-xs'
+                ? 'bg-[#0a5450] text-white shadow-xs font-bold'
                 : 'text-slate-600 dark:text-slate-300 hover:bg-teal-50 dark:hover:bg-teal-900/30'
             }`}
           >
@@ -263,9 +267,9 @@ export const ProviderDashboard: React.FC = () => {
           </button>
           <button
             onClick={() => setActiveTab('patients')}
-            className={`px-4 py-2 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
+            className={`px-4 py-2 text-xs font-semibold rounded-lg transition-colors cursor-pointer shrink-0 whitespace-nowrap ${
               activeTab === 'patients'
-                ? 'bg-[#0a5450] text-white shadow-xs'
+                ? 'bg-[#0a5450] text-white shadow-xs font-bold'
                 : 'text-slate-600 dark:text-slate-300 hover:bg-teal-50 dark:hover:bg-teal-900/30'
             }`}
           >
@@ -274,23 +278,23 @@ export const ProviderDashboard: React.FC = () => {
         </div>
 
         {/* Date Filter & Search */}
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-2.5 w-full md:w-auto">
           <div className="flex items-center gap-2 bg-[#0a5450] text-white px-3 py-1.5 rounded-lg border border-teal-400/30 text-xs">
-            <Calendar className="w-3.5 h-3.5 text-teal-200" />
+            <Calendar className="w-3.5 h-3.5 text-teal-200 shrink-0" />
             <input
               type="date"
               value={filterDate}
               onChange={(e) => setFilterDate(e.target.value)}
-              className="bg-transparent border-none text-white font-mono focus:outline-none"
+              className="bg-transparent border-none text-white font-mono focus:outline-none w-full"
             />
           </div>
 
           <div className="flex items-center gap-2 bg-[#0a5450] text-white px-3 py-1.5 rounded-lg border border-teal-400/30 text-xs">
-            <Filter className="w-3.5 h-3.5 text-teal-200" />
+            <Filter className="w-3.5 h-3.5 text-teal-200 shrink-0" />
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="bg-transparent border-none text-white focus:outline-none cursor-pointer"
+              className="bg-transparent border-none text-white focus:outline-none cursor-pointer w-full"
             >
               <option value="all" className="bg-[#073b38] text-white">All Statuses</option>
               <option value="checked-in" className="bg-[#073b38] text-white">Waiting Room</option>
@@ -301,14 +305,14 @@ export const ProviderDashboard: React.FC = () => {
             </select>
           </div>
 
-          <div className="relative">
-            <Search className="w-3.5 h-3.5 text-teal-300 absolute left-3 top-2.5" />
+          <div className="relative w-full sm:w-auto">
+            <Search className="w-3.5 h-3.5 text-teal-300 absolute left-3 top-2.5 shrink-0" />
             <input
               type="text"
               placeholder="Search patient or service..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-8 pr-3 py-1.5 text-xs rounded-lg border border-teal-400/30 bg-[#0a5450] text-white placeholder-teal-200/60 focus:outline-none focus:ring-1 focus:ring-teal-300"
+              className="w-full pl-8 pr-3 py-1.5 text-xs rounded-lg border border-teal-400/30 bg-[#0a5450] text-white placeholder-teal-200/60 focus:outline-none focus:ring-1 focus:ring-teal-300"
             />
           </div>
         </div>

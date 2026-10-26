@@ -2,6 +2,8 @@
  * Data models for Dr M.N. Ntshangase GP Surgery
  */
 
+export type Language = 'en' | 'zu';
+
 export type UserRole = 'patient' | 'provider';
 
 export type AppointmentStatus = 'booked' | 'checked-in' | 'in-consult' | 'completed' | 'cancelled';

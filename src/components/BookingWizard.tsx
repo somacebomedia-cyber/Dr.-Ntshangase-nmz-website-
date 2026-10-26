@@ -216,51 +216,51 @@ Walk-ins are triaged continuously.
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-sm flex items-center justify-center p-2.5 sm:p-4">
       {/* Modal Dialog Frame - Always Signature Pine Green Card */}
       <div className="relative w-full max-w-2xl bg-gradient-to-b from-[#0a5450] to-[#073b38] text-white rounded-2xl shadow-2xl border-2 border-teal-400/40 overflow-hidden transition-all">
         {/* Modal Header */}
-        <div className="bg-[#08423f] text-white p-5 sm:p-6 flex items-center justify-between border-b border-teal-600/40">
-          <div className="flex items-center gap-3">
-            <MedicalCrossIcon size="sm" className="bg-white/10" />
-            <div>
-              <h3 className="text-lg sm:text-xl font-bold tracking-tight text-white">
+        <div className="bg-[#08423f] text-white p-4 sm:p-6 flex items-center justify-between border-b border-teal-600/40">
+          <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+            <MedicalCrossIcon size="sm" className="bg-white/10 shrink-0" />
+            <div className="min-w-0">
+              <h3 className="text-base sm:text-xl font-bold tracking-tight text-white truncate">
                 Online Appointment Scheduling
               </h3>
-              <p className="text-xs text-teal-200">
+              <p className="text-[11px] sm:text-xs text-teal-200 truncate">
                 Dr M.N. Ntshangase Surgery · Umzimkhulu
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-teal-200 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg text-teal-200 hover:text-white hover:bg-white/10 transition-colors cursor-pointer shrink-0 ml-2"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Stepper Bar */}
-        <div className="px-6 py-3 bg-[#062e2c] border-b border-teal-600/40 flex items-center justify-between text-xs font-medium text-teal-300/80">
-          <span className={step >= 1 ? 'text-white font-bold' : ''}>
+        <div className="px-4 sm:px-6 py-2.5 sm:py-3 bg-[#062e2c] border-b border-teal-600/40 flex items-center justify-between text-[11px] sm:text-xs font-medium text-teal-300/80 overflow-x-auto no-scrollbar">
+          <span className={`shrink-0 ${step >= 1 ? 'text-white font-bold' : ''}`}>
             1. Service
           </span>
-          <span>&rarr;</span>
-          <span className={step >= 2 ? 'text-white font-bold' : ''}>
+          <span className="shrink-0 px-1">&rarr;</span>
+          <span className={`shrink-0 ${step >= 2 ? 'text-white font-bold' : ''}`}>
             2. Date & Slot
           </span>
-          <span>&rarr;</span>
-          <span className={step >= 3 ? 'text-white font-bold' : ''}>
+          <span className="shrink-0 px-1">&rarr;</span>
+          <span className={`shrink-0 ${step >= 3 ? 'text-white font-bold' : ''}`}>
             3. Patient Info
           </span>
-          <span>&rarr;</span>
-          <span className={step >= 4 ? 'text-emerald-300 font-bold' : ''}>
+          <span className="shrink-0 px-1">&rarr;</span>
+          <span className={`shrink-0 ${step >= 4 ? 'text-emerald-300 font-bold' : ''}`}>
             4. Pass
           </span>
         </div>
 
         {/* Content Body */}
-        <div className="p-6 sm:p-8 max-h-[75vh] overflow-y-auto">
+        <div className="p-4 sm:p-8 max-h-[78vh] overflow-y-auto">
           {/* STEP 1: Select Service */}
           {step === 1 && (
             <div className="space-y-4">
