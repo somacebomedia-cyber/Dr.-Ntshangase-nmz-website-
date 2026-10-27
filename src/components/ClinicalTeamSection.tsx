@@ -1,7 +1,9 @@
 import React from 'react';
 import { Stethoscope, Award, CheckCircle, Calendar, ArrowRight } from 'lucide-react';
+import { motion } from 'motion/react';
 import { MedicalCrossIcon, CircleMotif } from './CircleMotifs';
 import { useLanguage } from '../context/LanguageContext';
+import { IMAGES } from '../assets';
 
 interface ClinicalTeamSectionProps {
   onOpenBooking: () => void;
@@ -27,7 +29,7 @@ export const ClinicalTeamSection: React.FC<ClinicalTeamSectionProps> = ({
       daysEn: 'Mon – Sat Consultations',
       daysZu: 'UMsombuluko – UMgqibelo',
       isLead: true,
-      imageSrc: '/src/assets/images/hero_doctor_portrait_1793007985493.jpg',
+      imageSrc: IMAGES.heroDoctor,
     },
     {
       name: 'Sister N. Khumalo',
@@ -41,7 +43,7 @@ export const ClinicalTeamSection: React.FC<ClinicalTeamSectionProps> = ({
       daysEn: 'Mon – Sat Daily Triage',
       daysZu: 'UMsombuluko – UMgqibelo Nsuku Zonke',
       isLead: false,
-      imageSrc: '/src/assets/images/nurse_triage_portrait_1793007989179.jpg',
+      imageSrc: IMAGES.nurseTriage,
     },
     {
       name: 'Sister B. Dlamini',
@@ -55,7 +57,7 @@ export const ClinicalTeamSection: React.FC<ClinicalTeamSectionProps> = ({
       daysEn: 'Mon – Fri Schedule',
       daysZu: 'UMsombuluko – ULwesihlanu',
       isLead: false,
-      imageSrc: '/src/assets/images/clinical_consultation_care_1793007987133.jpg',
+      imageSrc: IMAGES.clinicalConsultation,
     },
     {
       name: 'S. Cele',
@@ -69,7 +71,7 @@ export const ClinicalTeamSection: React.FC<ClinicalTeamSectionProps> = ({
       daysEn: 'Mon – Sat Reception',
       daysZu: 'UMsombuluko – UMgqibelo e-Reception',
       isLead: false,
-      imageSrc: '/src/assets/images/surgery_reception_desk_1793007988902.jpg',
+      imageSrc: IMAGES.surgeryReception,
     },
   ];
 
@@ -80,7 +82,13 @@ export const ClinicalTeamSection: React.FC<ClinicalTeamSectionProps> = ({
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="text-center max-w-2xl mx-auto mb-12 sm:mb-16"
+        >
           <span className="text-xs font-bold text-teal-800 dark:text-teal-300 uppercase tracking-widest">
             {t.team.kicker}
           </span>
@@ -90,13 +98,17 @@ export const ClinicalTeamSection: React.FC<ClinicalTeamSectionProps> = ({
           <p className="text-sm text-slate-600 dark:text-slate-300 mt-2">
             {t.team.subtitle}
           </p>
-        </div>
+        </motion.div>
 
         {/* 4 Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
           {team.map((member, idx) => (
-            <div
+            <motion.div
               key={idx}
+              initial={{ opacity: 0, y: 32 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.15 }}
+              transition={{ duration: 0.55, delay: idx * 0.12, ease: [0.16, 1, 0.3, 1] }}
               className={`p-6 rounded-2xl bg-white dark:bg-[#072d2a] border transition-all flex flex-col justify-between shadow-xs hover:shadow-lg ${
                 member.isLead
                   ? 'border-teal-400 dark:border-teal-500 ring-2 ring-teal-500/20'
@@ -109,7 +121,8 @@ export const ClinicalTeamSection: React.FC<ClinicalTeamSectionProps> = ({
                   <img
                     src={member.imageSrc}
                     alt={member.name}
-                    referrerPolicy="no-referrer"
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
 
@@ -162,7 +175,7 @@ export const ClinicalTeamSection: React.FC<ClinicalTeamSectionProps> = ({
                   {t.team.bookVisit} &rarr;
                 </button>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

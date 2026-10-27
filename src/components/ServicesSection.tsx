@@ -12,9 +12,11 @@ import {
   Sparkles,
   Award,
 } from 'lucide-react';
+import { motion } from 'motion/react';
 import { ClinicalService } from '../types';
 import { CircleMotif } from './CircleMotifs';
 import { useLanguage } from '../context/LanguageContext';
+import { IMAGES } from '../assets';
 
 interface ServicesSectionProps {
   onSelectService: (service: ClinicalService) => void;
@@ -78,7 +80,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
       clinicalScopeZu: 'Ukugula okubucayi kwabantu abadala nezingane, izifo ezithathelwanayo, nokuhlola impilo',
       imageLabel: 'Consulting Room 1 · Dr M.N. Ntshangase',
       imageLabelZu: 'Igumbi Lokubonisana 1 · UDkt M.N. Ntshangase',
-      imageSrc: '/src/assets/images/facility_medical_room_1793007986328.jpg',
+      imageSrc: IMAGES.facilityRoom,
     },
     'hiv-care': {
       titleZu: 'Umtholampilo We-HIV Nemithi ye-ART',
@@ -100,7 +102,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
       clinicalScopeZu: 'Imithi ye-HIV ephelele eqinisekiswe yi-CMSA (Colleges of Medicine SA)',
       imageLabel: 'Specialized Immunology Clinic Suite',
       imageLabelZu: 'Ikamelo Elikhethekile Lokwelapha Amasosha Omzimba',
-      imageSrc: '/src/assets/images/clinical_consultation_care_1793007987133.jpg',
+      imageSrc: IMAGES.clinicalConsultation,
     },
     'chronic-mgmt': {
       titleZu: 'Ukunakekelwa Kwezifo Ezingamahlalakhona',
@@ -122,7 +124,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
       clinicalScopeZu: 'Ukugcina impilo yesikhathi eside, isiqondiso sempilo, nokuzinza kwezifo',
       imageLabel: 'Chronic Care & Vital Signs Assessment Wing',
       imageLabelZu: 'Isigceme Sokuhlolwa Kwezifo Ezingamahlalakhona',
-      imageSrc: '/src/assets/images/clinical_consultation_care_1793007987133.jpg',
+      imageSrc: IMAGES.clinicalConsultation,
     },
     'wound-care': {
       titleZu: 'Ukuhlinza Okuncane & Nokubopha Amanxeba',
@@ -144,7 +146,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
       clinicalScopeZu: 'Ukuhlinza okuncane okuhlanzekile, ukubopha amanxeba, nokwelapha ukusha',
       imageLabel: 'Sterile Minor Surgery & Procedure Theatre',
       imageLabelZu: 'Igumbi Lokuhlinza Okuncane Okuhlanzekile',
-      imageSrc: '/src/assets/images/facility_medical_room_1793007986328.jpg',
+      imageSrc: IMAGES.facilityRoom,
     },
     'rapid-screen': {
       titleZu: 'Ukuhlola Okusheshayo Kwaselabhorethri',
@@ -166,7 +168,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
       clinicalScopeZu: 'Ukuhlola okusheshayo khona lapho ukuze kuthathwe izinqumo zokwelapha ngokushesha',
       imageLabel: 'On-Site Diagnostic Testing Laboratory',
       imageLabelZu: 'ILabhorethri Yokuhlola Yasendaweni',
-      imageSrc: '/src/assets/images/facility_medical_room_1793007986328.jpg',
+      imageSrc: IMAGES.facilityRoom,
     },
   };
 
@@ -184,7 +186,13 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <div className="max-w-3xl mb-12 sm:mb-16">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="max-w-3xl mb-12 sm:mb-16"
+        >
           <div className="flex items-center gap-2 text-xs font-bold tracking-wider text-teal-800 dark:text-teal-300 uppercase">
             <span>{t.facilities.kicker}</span>
           </div>
@@ -194,12 +202,18 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
           <p className="mt-3 text-base text-slate-600 dark:text-slate-300 leading-relaxed">
             {t.facilities.subtitle}
           </p>
-        </div>
+        </motion.div>
 
         {/* 2-Column Interactive Facilities Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Left Column: Vertical Category Navigation */}
-          <div className="lg:col-span-4 space-y-2.5">
+          <motion.div
+            initial={{ opacity: 0, y: 28 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.15 }}
+            transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+            className="lg:col-span-4 space-y-2.5"
+          >
             {CLINICAL_SERVICES.map((service) => {
               const isActive = service.id === activeServiceId;
               const svcDetails = facilityDetails[service.id];
@@ -252,16 +266,23 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
                 {t.facilities.walkinNoticeBody}
               </p>
             </div>
-          </div>
+          </motion.div>
 
           {/* Right Column: Detailed Showcase Card with Clinical Photography */}
-          <div className="lg:col-span-8 p-4 sm:p-6 lg:p-8 rounded-2xl bg-white dark:bg-[#072d2a] border border-slate-200 dark:border-teal-500/30 shadow-lg">
+          <motion.div
+            initial={{ opacity: 0, y: 32 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.15 }}
+            transition={{ duration: 0.6, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
+            className="lg:col-span-8 p-4 sm:p-6 lg:p-8 rounded-2xl bg-white dark:bg-[#072d2a] border border-slate-200 dark:border-teal-500/30 shadow-lg"
+          >
             {/* Visual Photo Header with Badge */}
             <div className="relative aspect-16/9 rounded-xl overflow-hidden shadow-md mb-6 group">
               <img
                 src={details.imageSrc}
                 alt={activeImageLabel}
-                referrerPolicy="no-referrer"
+                loading="lazy"
+                decoding="async"
                 className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-500"
               />
 
@@ -353,7 +374,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
                 </button>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

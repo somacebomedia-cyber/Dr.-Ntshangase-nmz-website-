@@ -1,5 +1,6 @@
 import React from 'react';
 import { X, CheckCircle, ExternalLink } from 'lucide-react';
+import { IMAGES } from '../assets';
 
 interface ReferencePhotosModalProps {
   isOpen: boolean;
@@ -11,19 +12,19 @@ export const ReferencePhotosModal: React.FC<ReferencePhotosModalProps> = ({ isOp
 
   const photos = [
     {
-      src: '/assets/aistudio/IMG_20260910_101312_918_e06909d7.jpg',
+      src: IMAGES.reference.entranceSign,
       title: 'Physical Surgery Entrance Sign',
       subtitle: 'DR M.N. NTSHANGASE · MBCHB (CUBA/UP) | HIV DIP (CMSA)',
       details: 'Deep pine/medical teal sign with white cross badge, located above the surgery entrance in Umzimkhulu.',
     },
     {
-      src: '/assets/aistudio/IMG_20260910_101257_883_9387b7f6.jpg',
+      src: IMAGES.reference.doorFilm,
       title: 'Entrance Door Film (Circles Motif)',
       subtitle: 'The Signature Circles & Curved Horizon Graphic',
       details: 'Layered organic teal/seafoam bubbles and curved horizon motif, faithfully reproduced throughout this web application.',
     },
     {
-      src: '/assets/aistudio/IMG_20260910_101243_738_081ecf3e.jpg',
+      src: IMAGES.reference.hoursPlaque,
       title: 'Consulting Hours Metal Plaque',
       subtitle: 'Mon–Fri 08:00–17:00 | Sat 08:00–13:00 | Walk-ins Welcome',
       details: 'Physical schedule board mounted on exterior brick wall, inspiring the digital schedule card and hours engine.',
@@ -66,11 +67,9 @@ export const ReferencePhotosModal: React.FC<ReferencePhotosModalProps> = ({ isOp
                   <img
                     src={item.src}
                     alt={item.title}
-                    referrerPolicy="no-referrer"
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                    onError={(e) => {
-                      (e.currentTarget as HTMLElement).style.display = 'none';
-                    }}
                   />
                 </div>
                 <div className="p-4 flex-1 flex flex-col justify-between">

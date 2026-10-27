@@ -1,7 +1,9 @@
 import React from 'react';
 import { Phone, Clock, ArrowRight } from 'lucide-react';
+import { motion } from 'motion/react';
 import { CircleMotif } from './CircleMotifs';
 import { useLanguage } from '../context/LanguageContext';
+import { IMAGES } from '../assets';
 
 interface UrgentCareBannerProps {
   onOpenBooking: () => void;
@@ -20,7 +22,13 @@ export const UrgentCareBanner: React.FC<UrgentCareBannerProps> = ({
       <CircleMotif variant="ambient-orbs" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-teal-600 via-teal-700 to-[#0a5450] text-white p-6 sm:p-10 lg:p-12 shadow-xl border border-teal-400/30">
+        <motion.div
+          initial={{ opacity: 0, y: 28 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-teal-600 via-teal-700 to-[#0a5450] text-white p-6 sm:p-10 lg:p-12 shadow-xl border border-teal-400/30"
+        >
           {/* Subtle decorative circles embedded */}
           <div className="absolute -bottom-6 right-1/4 opacity-20 pointer-events-none w-64 max-w-full overflow-hidden">
             <CircleMotif variant="compact" />
@@ -72,9 +80,10 @@ export const UrgentCareBanner: React.FC<UrgentCareBannerProps> = ({
             <div className="lg:col-span-5 flex flex-col gap-4">
               <div className="relative rounded-2xl overflow-hidden aspect-16/10 shadow-lg border border-white/25">
                 <img
-                  src="/src/assets/images/clinical_consultation_care_1793007987133.jpg"
+                  src={IMAGES.clinicalConsultation}
                   alt="Clinical doctor and patient consultation"
-                  referrerPolicy="no-referrer"
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end p-3">
@@ -96,7 +105,7 @@ export const UrgentCareBanner: React.FC<UrgentCareBannerProps> = ({
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

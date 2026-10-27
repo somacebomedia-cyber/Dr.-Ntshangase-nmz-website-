@@ -1,7 +1,9 @@
 import React from 'react';
 import { ShieldCheck, CheckCircle2, CreditCard, Receipt, FileText, ArrowRight, HelpCircle } from 'lucide-react';
+import { motion } from 'motion/react';
 import { CircleMotif } from './CircleMotifs';
 import { useLanguage } from '../context/LanguageContext';
+import { IMAGES } from '../assets';
 
 interface BillingInsuranceSectionProps {
   onOpenBooking: () => void;
@@ -38,14 +40,21 @@ export const BillingInsuranceSection: React.FC<BillingInsuranceSectionProps> = (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
           {/* Left Column: Visual Card with Real Surgery Reception Photo & Trust Badges */}
-          <div className="lg:col-span-5 space-y-4">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="lg:col-span-5 space-y-4"
+          >
             <div className="relative rounded-2xl overflow-hidden border border-slate-200 dark:border-teal-500/30 shadow-xl bg-white dark:bg-[#072d2a] p-4 sm:p-6">
               {/* Welcoming Reception Photo */}
               <div className="relative aspect-16/10 rounded-xl overflow-hidden shadow-sm mb-5 group">
                 <img
-                  src="/src/assets/images/surgery_reception_desk_1793007988902.jpg"
+                  src={IMAGES.surgeryReception}
                   alt="Surgery reception desk and appointment check-in"
-                  referrerPolicy="no-referrer"
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover group-hover:scale-104 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent flex items-end p-4">
@@ -109,10 +118,16 @@ export const BillingInsuranceSection: React.FC<BillingInsuranceSectionProps> = (
                 </span>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Right Column: Billing Information & Guarantees */}
-          <div className="lg:col-span-7 space-y-6">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.6, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+            className="lg:col-span-7 space-y-6"
+          >
             <div>
               <span className="text-xs font-bold text-teal-800 dark:text-teal-300 uppercase tracking-widest">
                 {t.billing.kicker}
@@ -153,7 +168,7 @@ export const BillingInsuranceSection: React.FC<BillingInsuranceSectionProps> = (
                 {t.billing.queriesText}
               </span>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Stethoscope, ShieldCheck, Activity, HeartPulse } from 'lucide-react';
+import { motion } from 'motion/react';
 import { ClinicalService } from '../types';
 import { CLINICAL_SERVICES } from '../services/storage';
 import { CircleMotif } from './CircleMotifs';
@@ -70,7 +71,13 @@ export const QuickBookingStrip: React.FC<QuickBookingStripProps> = ({
       <CircleMotif variant="scatter-left" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-10">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="text-center max-w-2xl mx-auto mb-8 sm:mb-10"
+        >
           <span className="text-xs font-bold text-teal-800 dark:text-teal-300 uppercase tracking-widest">
             {t.quickBooking.kicker}
           </span>
@@ -80,15 +87,19 @@ export const QuickBookingStrip: React.FC<QuickBookingStripProps> = ({
           <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-2">
             {t.quickBooking.subtitle}
           </p>
-        </div>
+        </motion.div>
 
         {/* 4 Clean Quick Action Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {categories.map((cat, index) => {
             const Icon = cat.icon;
             return (
-              <button
+              <motion.button
                 key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.15 }}
+                transition={{ duration: 0.5, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
                 onClick={() => handleCardClick(cat.serviceId)}
                 className="group p-6 rounded-2xl bg-white dark:bg-[#072d2a] border border-slate-200/90 dark:border-teal-500/20 shadow-xs hover:shadow-md hover:border-teal-500/40 dark:hover:border-teal-400/50 transition-all text-left flex flex-col justify-between cursor-pointer"
               >
@@ -117,7 +128,7 @@ export const QuickBookingStrip: React.FC<QuickBookingStripProps> = ({
                   <span>{t.quickBooking.scheduleCta}</span>
                   <span>&rarr;</span>
                 </div>
-              </button>
+              </motion.button>
             );
           })}
         </div>

@@ -1,7 +1,9 @@
 import React from 'react';
 import { CircleMotif, MedicalCrossIcon } from './CircleMotifs';
 import { Calendar, Shield, MapPin, Clock, ArrowRight, Camera, Star, CheckCircle, HeartPulse, UserCheck } from 'lucide-react';
+import { motion } from 'motion/react';
 import { useLanguage } from '../context/LanguageContext';
+import { IMAGES } from '../assets';
 
 interface HeroProps {
   onOpenBooking: () => void;
@@ -25,7 +27,12 @@ export const Hero: React.FC<HeroProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           {/* Left Column: Proposition Matching Reference Headline */}
-          <div className="lg:col-span-7 space-y-6 sm:space-y-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+            className="lg:col-span-7 space-y-6 sm:space-y-8"
+          >
             {/* Trust Kicker with Unboxed Metadata */}
             <div className="flex flex-wrap items-center gap-2 text-xs font-bold text-teal-800 dark:text-teal-300 uppercase tracking-wider">
               <span>{t.hero.kicker}</span>
@@ -76,15 +83,19 @@ export const Hero: React.FC<HeroProps> = ({
               <div className="flex -space-x-2 shrink-0">
                 <div className="w-10 h-10 rounded-full border-2 border-white dark:border-[#072422] bg-teal-700 text-white text-xs font-bold flex items-center justify-center shadow-xs overflow-hidden">
                   <img
-                    src="/src/assets/images/hero_doctor_portrait_1793007985493.jpg"
+                    src={IMAGES.heroDoctor}
                     alt="Dr Ntshangase"
+                    loading="eager"
+                    decoding="async"
                     className="w-full h-full object-cover"
                   />
                 </div>
                 <div className="w-10 h-10 rounded-full border-2 border-white dark:border-[#072422] bg-cyan-600 text-white text-xs font-bold flex items-center justify-center shadow-xs overflow-hidden">
                   <img
-                    src="/src/assets/images/nurse_triage_portrait_1793007989179.jpg"
+                    src={IMAGES.nurseTriage}
                     alt="Sister Khumalo"
+                    loading="eager"
+                    decoding="async"
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -115,7 +126,7 @@ export const Hero: React.FC<HeroProps> = ({
                 <span>{t.hero.locationHub}</span>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Right Column: Arched Doctor Portrait with Actual High-Fidelity Medical Photo */}
           <div className="lg:col-span-5 relative flex flex-col items-center justify-center w-full max-w-full">
@@ -123,9 +134,10 @@ export const Hero: React.FC<HeroProps> = ({
             <div className="relative w-full max-w-[340px] sm:max-w-[390px] aspect-4/5 rounded-t-full rounded-b-3xl bg-gradient-to-b from-teal-500/25 via-teal-600/15 to-teal-800/35 dark:from-teal-500/15 dark:via-teal-800/20 dark:to-teal-950/40 p-3 sm:p-4 border-2 border-teal-500/30 shadow-2xl overflow-hidden flex items-end justify-center">
               <div className="relative w-full h-full rounded-t-full rounded-b-2xl overflow-hidden shadow-inner group">
                 <img
-                  src="/src/assets/images/hero_doctor_portrait_1793007985493.jpg"
+                  src={IMAGES.heroDoctor}
                   alt="Dr M.N. Ntshangase - Lead General Practitioner"
-                  referrerPolicy="no-referrer"
+                  loading="eager"
+                  decoding="async"
                   className="w-full h-full object-cover object-top hover:scale-105 transition-transform duration-500"
                 />
 
