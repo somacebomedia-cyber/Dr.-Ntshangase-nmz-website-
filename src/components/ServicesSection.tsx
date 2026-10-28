@@ -7,6 +7,8 @@ import {
   Bandage,
   HeartPulse,
   ArrowRight,
+  ArrowDown,
+  Calendar,
   CheckCircle2,
   Clock,
   Sparkles,
@@ -28,6 +30,29 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
 
   const activeService =
     CLINICAL_SERVICES.find((s) => s.id === activeServiceId) || CLINICAL_SERVICES[0];
+
+  const handleSelectService = (serviceId: string, shouldScroll = true) => {
+    setActiveServiceId(serviceId);
+    if (shouldScroll && typeof window !== 'undefined' && window.innerWidth < 1024) {
+      setTimeout(() => {
+        const detailsEl = document.getElementById('clinical-department-details');
+        if (detailsEl) {
+          const yOffset = -75;
+          const y = detailsEl.getBoundingClientRect().top + window.pageYOffset + yOffset;
+          window.scrollTo({ top: y, behavior: 'smooth' });
+        }
+      }, 50);
+    }
+  };
+
+  const handleScrollToDepartments = () => {
+    const listEl = document.getElementById('departments-selector-list');
+    if (listEl) {
+      const yOffset = -75;
+      const y = listEl.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+  };
 
   const getIcon = (iconName: string, className = 'w-5 h-5') => {
     switch (iconName) {
@@ -208,11 +233,12 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Left Column: Vertical Category Navigation */}
           <motion.div
+            id="departments-selector-list"
             initial={{ opacity: 0, y: 28 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.15 }}
             transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:col-span-4 space-y-2.5"
+            className="lg:col-span-4 space-y-3"
           >
             {CLINICAL_SERVICES.map((service) => {
               const isActive = service.id === activeServiceId;
@@ -220,16 +246,24 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
               const svcTitle = language === 'zu' && svcDetails ? svcDetails.titleZu : service.title;
 
               return (
-                <button
+                <div
                   key={service.id}
-                  onClick={() => setActiveServiceId(service.id)}
-                  className={`w-full p-4 rounded-xl flex items-center justify-between transition-all text-left cursor-pointer ${
+                  onClick={() => handleSelectService(service.id, true)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      handleSelectService(service.id, true);
+                    }
+                  }}
+                  className={`w-full p-3.5 sm:p-4 rounded-xl flex items-center justify-between transition-all text-left cursor-pointer select-none ${
                     isActive
-                      ? 'bg-teal-600 text-white shadow-md font-semibold'
-                      : 'bg-[#f8fbfb] dark:bg-[#072d2a] text-slate-700 dark:text-slate-200 hover:bg-teal-50 dark:hover:bg-teal-900/40 border border-slate-200/80 dark:border-teal-700/40'
+                      ? 'bg-teal-600 text-white shadow-lg ring-2 ring-teal-500/50'
+                      : 'bg-[#f8fbfb] dark:bg-[#072d2a] text-slate-700 dark:text-slate-200 hover:bg-teal-50/80 dark:hover:bg-teal-900/40 border border-slate-200/80 dark:border-teal-700/40'
                   }`}
                 >
-                  <div className="flex items-center gap-3.5">
+                  <div className="flex items-center gap-3 sm:gap-3.5 min-w-0 flex-1 mr-2">
                     <div
                       className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${
                         isActive
@@ -239,23 +273,51 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
                     >
                       {getIcon(service.icon)}
                     </div>
-                    <div>
-                      <h4 className="text-sm font-bold tracking-tight">
+                    <div className="min-w-0 flex-1">
+                      <h4 className="text-sm font-bold tracking-tight truncate">
                         {svcTitle}
                       </h4>
                       <p
-                        className={`text-xs mt-0.5 ${
+                        className={`text-xs mt-0.5 truncate ${
                           isActive ? 'text-teal-100' : 'text-slate-500 dark:text-slate-400'
                         }`}
                       >
                         {service.durationMinutes} {language === 'zu' ? 'imizuzu' : 'mins'} · {service.badge || (language === 'zu' ? 'Ukubonisana' : 'Consultation')}
                       </p>
+                      {/* Mobile-only active viewing feedback */}
+                      {isActive && (
+                        <span className="lg:hidden inline-flex items-center gap-1 text-[11px] font-semibold text-teal-100 mt-1">
+                          <span>{t.facilities.viewingDetails}</span>
+                          <ArrowDown className="w-3 h-3 animate-bounce" />
+                        </span>
+                      )}
                     </div>
                   </div>
-                  <span className={`text-sm ${isActive ? 'text-white' : 'text-slate-400'}`}>
-                    &rarr;
-                  </span>
-                </button>
+
+                  {/* Dual Actions: Quick Book directly or tap to view details */}
+                  <div className="flex items-center gap-2 shrink-0">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onSelectService(service);
+                      }}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                        isActive
+                          ? 'bg-white text-teal-800 hover:bg-teal-50 shadow-xs'
+                          : 'bg-teal-600 hover:bg-teal-700 text-white shadow-xs'
+                      }`}
+                      title={`${t.facilities.quickBook} ${svcTitle}`}
+                    >
+                      <Calendar className="w-3.5 h-3.5" />
+                      <span>{t.facilities.quickBook}</span>
+                    </button>
+
+                    <span className={`text-sm hidden sm:inline-block ${isActive ? 'text-white' : 'text-slate-400'}`}>
+                      {isActive ? '↓' : '→'}
+                    </span>
+                  </div>
+                </div>
               );
             })}
 
@@ -270,12 +332,27 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
 
           {/* Right Column: Detailed Showcase Card with Clinical Photography */}
           <motion.div
+            id="clinical-department-details"
             initial={{ opacity: 0, y: 32 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.15 }}
             transition={{ duration: 0.6, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:col-span-8 p-4 sm:p-6 lg:p-8 rounded-2xl bg-white dark:bg-[#072d2a] border border-slate-200 dark:border-teal-500/30 shadow-lg"
+            className="lg:col-span-8 p-4 sm:p-6 lg:p-8 rounded-2xl bg-white dark:bg-[#072d2a] border border-slate-200 dark:border-teal-500/30 shadow-lg scroll-mt-20"
           >
+            {/* Mobile Top Navigation Helper */}
+            <div className="lg:hidden mb-4 p-2.5 rounded-xl bg-teal-50 dark:bg-teal-950/60 border border-teal-200/80 dark:border-teal-800/50 flex items-center justify-between text-xs">
+              <span className="font-bold text-teal-900 dark:text-teal-200 truncate mr-2">
+                {activeTitle}
+              </span>
+              <button
+                type="button"
+                onClick={handleScrollToDepartments}
+                className="text-teal-700 dark:text-teal-300 font-bold hover:underline cursor-pointer flex items-center gap-1 text-[11px] shrink-0"
+              >
+                {t.facilities.backToDepartments}
+              </button>
+            </div>
+
             {/* Visual Photo Header with Badge */}
             <div className="relative aspect-16/9 rounded-xl overflow-hidden shadow-md mb-6 group">
               <img

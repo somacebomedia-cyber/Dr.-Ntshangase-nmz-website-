@@ -66,6 +66,10 @@ export interface Translations {
     standardsLabel: string;
     estimatedTime: string;
     scheduleBtn: string;
+    viewDetailsBelow: string;
+    viewingDetails: string;
+    quickBook: string;
+    backToDepartments: string;
   };
   urgentBanner: {
     walkinBadge: string;
@@ -230,6 +234,10 @@ export const translations: Record<Language, Translations> = {
       standardsLabel: 'HPCSA & CMSA Standards',
       estimatedTime: 'Estimated Time',
       scheduleBtn: 'Schedule Consultation',
+      viewDetailsBelow: 'Tap to view details below',
+      viewingDetails: 'Viewing details below',
+      quickBook: 'Book',
+      backToDepartments: '↑ Back to department list',
     },
     urgentBanner: {
       walkinBadge: 'Walk-ins Welcome Daily · 08:00 – 17:00',
@@ -392,6 +400,10 @@ export const translations: Record<Language, Translations> = {
       standardsLabel: 'Amazinga e-HPCSA & CMSA',
       estimatedTime: 'Isikhathi Esilinganiselwe',
       scheduleBtn: 'Bhukha Lolu Sizo',
+      viewDetailsBelow: 'Cindezela ukuze ubone ngezansi',
+      viewingDetails: 'Kubukwa imininingwane ngezansi',
+      quickBook: 'Bhukha',
+      backToDepartments: '↑ Buyela ohlwini lweminyango',
     },
     urgentBanner: {
       walkinBadge: 'Abangabhukhanga Bamukelekile Nsuku Zonke · 08:00 – 17:00',
